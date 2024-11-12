@@ -245,11 +245,11 @@ db.test.updateOne(
                 "Cooking",
                 "Writing",
                 "Programming",
-                "Wacthing Movies", "Gaming",
+                "Watching Movies", "Gaming",
                 "Cooking",
                 "Writing",
                 "Programming",
-                "Wacthing Movies",]
+                "Watching Movies",]
         }
     }
 )
