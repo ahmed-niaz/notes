@@ -1,166 +1,159 @@
-# **_TypeScript, Express, ESLint, and Prettier Setup_**
 
-**_This guide outlines the steps to set up a TypeScript project with Express, ESLint, and Prettier for streamlined development and consistent code quality._**
+# ***TypeScript, Express, ESLint, and Prettier Setup***
 
-➡️**_Initialize the project:_**
+***This guide outlines the steps to set up a TypeScript project with Express, ESLint, and Prettier for streamlined development and consistent code quality.***
 
-```bash
-npm init -y
-```
+➡️***Initialize the project:***
 
-➡️**\* \***
-➡️**_Install Express_**
+   ```bash
+   npm init -y
+   ```
 
-```bash
-npm i express
-```
+➡️***Install Express***
+   ```bash
+   npm i express
+   ```
 
-➡️**_install TypeScript_**
+➡️***install TypeScript***
 
-```bash
-npm i -D typescript
-```
+   ```bash
+   npm i -D typescript
+   ```
 
-➡️**_Initialize the TypeScript configuration_**
 
-```bash
-tsc --init
-```
+➡️***Initialize the TypeScript configuration***
+   ```bash
+   tsc --init
+   ```
+📂***Create `src/server.ts` and `dist` file***
 
-📂**_Create `src/server.ts` and `dist` file_**
+➡️***Use the following default configuration in `tsconfig.json`***
 
-➡️**_Use the following default configuration in `tsconfig.json`_**
+   ```json
+   {
+     "compilerOptions": {
+       "target": "es2016",
+       "module": "commonjs",
+       "rootDir": "./src",
+       "outDir": "./dist",
+       "esModuleInterop": true,
+       "forceConsistentCasingInFileNames": true,
+       "strict": true,
+       "skipLibCheck": true
+     }
+   }
+   ```
 
-```json
-{
-  "compilerOptions": {
-    "target": "es2016",
-    "module": "commonjs",
-    "rootDir": "./src",
-    "outDir": "./dist",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "skipLibCheck": true
-  }
-}
-```
+➡️***Install Node.js types***
+ 
+   ```bash
+   npm i -D @types/node
+   ```
 
-➡️**_Install Node.js types_**
+➡️***Install ESLint and its required packages***
+   ```bash
+   npm i -D eslint@9.14.0 @eslint/js @types/eslint__js typescript-eslint
+   ```
 
-```bash
-npm i -D @types/node
-```
+➡️***Initialize ESLint***
+   ```bash
+   npx eslint --init
+   ```
 
-➡️**_Install ESLint and its required packages_**
+➡️ ***Ensure ESLint is installed at version `9.14.0`***
+   ```bash
+   npm remove eslint
+   npm i -D eslint@9.14.0
+   ```
 
-```bash
-npm i -D eslint@9.14.0 @eslint/js @types/eslint__js typescript-eslint
-```
+➡️***Create an `eslint.config.mjs` file in the project root and add the following***
 
-➡️**_Initialize ESLint_**
+   ```javascript
+   import globals from 'globals';
+   import pluginJs from '@eslint/js';
+   import tseslint from 'typescript-eslint';
 
-```bash
-npx eslint --init
-```
+   /** @type {import('eslint').Linter.Config[]} */
+   export default [
+     { files: ['**/*.{js,mjs,cjs,ts}'] },
+     { languageOptions: { globals: { ...globals.browser, ...globals.node } } },
+     pluginJs.configs.recommended,
+     ...tseslint.configs.recommended,
+     {
+       ignores: ['node_modules', 'dist'],
+       rules: {
+         'no-unused-vars': 'error',
+         'no-unused-expressions': 'error',
+         'prefer-const': 'error',
+         'no-console': 'warn',
+         'no-undef': 'error'
+       },
+       globals: {
+         process: 'readonly'
+       }
+     }
+   ];
+   ```
 
-➡️ **_Ensure ESLint is installed at version `9.14.0`_**
+➡️***Update `package.json` with ESLint scripts***
+   ```json
+   "scripts": {
+     "lint": "eslint src/**/*.ts",
+     "lint:fix": "eslint src/**/*.ts --fix"
+   }
+   ```
 
-```bash
-npm remove eslint
-npm i -D eslint@9.14.0
-```
 
-➡️**_Create an `eslint.config.mjs` file in the project root and add the following_**
+➡️***Install Prettier***
+   ```bash
+   npm i -D --exact prettier
+   ```
 
-```javascript
-import globals from "globals";
-import pluginJs from "@eslint/js";
-import tseslint from "typescript-eslint";
+***Create a `.prettierrc` file and add the following***
+   ```json
+   {
+     "semi": true,
+     "singleQuote": true
+   }
+   ```
 
-/** @type {import('eslint').Linter.Config[]} */
-export default [
-  { files: ["**/*.{js,mjs,cjs,ts}"] },
-  { languageOptions: { globals: { ...globals.browser, ...globals.node } } },
-  pluginJs.configs.recommended,
-  ...tseslint.configs.recommended,
-  {
-    ignores: ["node_modules", "dist"],
-    rules: {
-      "no-unused-vars": "error",
-      "no-unused-expressions": "error",
-      "prefer-const": "error",
-      "no-console": "warn",
-      "no-undef": "error",
-    },
-    globals: {
-      process: "readonly",
-    },
-  },
-];
-```
+➡️***Create a `.prettierignore` file and add the following***
+   ```
+   dist
+   coverage
+   ```
 
-**_Update `package.json` with ESLint scripts_**
+➡️***Update `package.json` with Prettier scripts***
+   ```json
+   "scripts": {
+     "format": "prettier . --write"
+   }
+   ```
 
-```json
-"scripts": {
-  "lint": "eslint src/**/*.ts",
-  "lint:fix": "eslint src/**/*.ts --fix"
-}
-```
 
-**_Install Prettier_**
 
-```bash
-npm i -D --exact prettier
-```
 
-**_Create a `.prettierrc` file and add the following_**
 
-```json
-{
-  "semi": true,
-  "singleQuote": true
-}
-```
+➡️***Install `ts-node-dev` for development***
+   ```bash
+   npm i ts-node-dev --save-dev
+   ```
 
-**_Create a `.prettierignore` file and add the following_**
+➡️***Add build, production, and development scripts to `package.json`***
+   ```json
+   "scripts": {
+     "build": "tsc",
+     "prod": "node ./dist/server.js",
+     "dev": "ts-node-dev --respawn --transpile-only src/server.ts"
+   }
+   ```
 
-```
-dist
-coverage
-```
+➡️***If `ts-node-dev` is installed locally, use `npx` in the script***
+   ```json
+   "scripts": {
+     "dev": "npx ts-node-dev --respawn --transpile-only src/server.ts"
+   }
+   ```
 
-**_Update `package.json` with Prettier scripts_**
-
-```json
-"scripts": {
-  "format": "prettier . --write"
-}
-```
-
-**_Install `ts-node-dev` for development_**
-
-```bash
-npm i ts-node-dev --save-dev
-```
-
-**_Add build, production, and development scripts to `package.json`_**
-
-```json
-"scripts": {
-  "build": "tsc",
-  "prod": "node ./dist/server.js",
-  "dev": "ts-node-dev --respawn --transpile-only src/server.ts"
-}
-```
-
-**_If `ts-node-dev` is installed locally, use `npx` in the script_**
-
-```json
-"scripts": {
-  "dev": "npx ts-node-dev --respawn --transpile-only src/server.ts"
-}
-```
 
 This setup ensures that your TypeScript project with Express is ready for production with linting and formatting support.
